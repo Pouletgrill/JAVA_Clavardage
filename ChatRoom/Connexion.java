@@ -30,21 +30,23 @@ public class Connexion implements Runnable
    }
    public void run()
    {
-      System.out.println("Client connecte");
+     System.out.println("Client connecte");
+      String Nom;
       try
       {
+         writer.print("Username :");
+         writer.flush();
+         Nom = reader.readLine();
          do 
-         {            
+         {                        
+            writer.print(Nom + ": ");
+            writer.flush();
             E = reader.readLine();
-            if (E != null)
-            {
-               writer.println(E);
-               writer.flush(); 
-            }
          }while (E.length()!=0);
       writer.close();
       reader.close();
-      System.out.println("Client deconnecte");      
+      System.out.println("Client deconnecte");
+      
       }
       catch (IOException ez)
       {         
