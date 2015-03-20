@@ -5,12 +5,14 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class ServeurEcho
-{
-   static ArrayList<Thread> PitBull = new ArrayList<>();
-   public static void main ( String args[]) throws IOException
+{ 
+   ArrayList<Connexion> ListeConnexion = new ArrayList<>();
+   public void Serveur()
    {
+     
       ServerSocket clientServer;
       final int MAXCONNECT = 2;
       try
@@ -26,16 +28,16 @@ public class ServeurEcho
          {
             try
             {
-               if (PitBull.size() < MAXCONNECT)
+               if (ListeConnexion.size() < MAXCONNECT)
                {
-                  clientServer.setSoTimeout(500);
-                  Socket client = clientServer.accept();
                   
-                  Connexion connexion = new Connexion(client);
+                  clientServer.setSoTimeout(500);
+                  Socket client = clientServer.accept();                  
+                  Connexion connexion = new Connexion(client,this);
                   Thread t = new Thread(connexion);
                   t.setDaemon(true);
                   t.start();
-                  PitBull.add(t);
+                  ListeConnexion.add(connexion);
                }
             }
             catch (IOException ey)
@@ -49,5 +51,18 @@ public class ServeurEcho
         ez.printStackTrace();
         System.exit(1);  
       }
+   }
+   
+   public synchronized void Distribuer(String Message)
+   {
+     ListIterator li = ListeConnexion.listIterator();
+   
+   while( li.hasNext() )
+      li.next().writer.print(Message); 
+         
+   }
+   public static void main ( String args[]) throws IOException
+   { 
+      new ServeurEcho().Serveur();
    }  
 }

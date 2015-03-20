@@ -5,14 +5,18 @@
 
 import java.io.*;
 import java.net.*;
+import java.lang.Object;
 
 public class Connexion implements Runnable
 {
    String E = null;
    PrintWriter writer = null;
    BufferedReader reader = null;
-   public Connexion(Socket client) 
-   {
+   String Nom;
+   String Ip;
+   ServeurEcho serveurEcho_;
+   public Connexion(Socket client,  ServeurEcho serveurEcho) 
+   {     
       try
       {
          writer = new PrintWriter(
@@ -21,6 +25,10 @@ public class Connexion implements Runnable
          reader = new BufferedReader(
                      new InputStreamReader(
                      client.getInputStream()));
+                     
+         Ip = client.getInetAddress().getHostAddress();
+         serveurEcho_ = serveurEcho;           
+
       }
       catch (IOException ioe)
       {
@@ -31,18 +39,46 @@ public class Connexion implements Runnable
    public void run()
    {
      System.out.println("Client connecte");
-      String Nom;
+     boolean vide = false;
       try
       {
          writer.print("Username :");
          writer.flush();
-         Nom = reader.readLine();
+         Nom = reader.readLine(); 
+         
+         if(Nom.length() < 1)
+         {
+              Nom = Ip;         
+         }      
+         
+         if(Nom.length() > 8)
+         {
+            Nom  =  Nom.substring(0,8);        
+         }    
+         
          do 
-         {                        
-            writer.print(Nom + ": ");
-            writer.flush();
+         {         
+           
             E = reader.readLine();
-         }while (E.length()!=0);
+            
+            if(E.length() > 80)
+            {
+               E = E.substring(0,80);
+            }
+            if(E.length() == 0)
+            {
+               vide = true;               
+            }
+            else
+            {
+                E = Nom + ": " + E;
+            
+                serveurEcho_.Distribuer(E);                
+            }
+                     
+            
+         }while (!vide);
+         
       writer.close();
       reader.close();
       System.out.println("Client deconnecte");
