@@ -52,15 +52,15 @@ public class Connexion implements Runnable
          writer.flush();
          Nom = reader.readLine(); 
          
-         if(Nom.length() < 1)
-         {
-              Nom = Ip;         
-         }      
-         
          if(Nom.length() > 8)
          {
             Nom  =  Nom.substring(0,8);        
          }    
+         
+         if(Nom.length() < 1)
+         {
+              Nom = Ip;         
+         }      
          
          do 
          {         

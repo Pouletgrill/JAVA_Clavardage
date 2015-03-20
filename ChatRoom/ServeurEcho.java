@@ -14,7 +14,7 @@ public class ServeurEcho
    {
      
       ServerSocket clientServer;
-      final int MAXCONNECT = 2;
+      final int MAXCONNECT = 5;
       try
       {
          clientServer = new ServerSocket(50000);
