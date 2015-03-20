@@ -55,11 +55,10 @@ public class ServeurEcho
    
    public synchronized void Distribuer(String Message)
    {
-     ListIterator li = ListeConnexion.listIterator();
-   
-   while( li.hasNext() )
-      li.next().writer.print(Message); 
-         
+   	for(int i= 0 ;  i < ListeConnexion.size(); i ++)
+	{
+		ListeConnexion.get(i).Ecrire(Message);
+        }
    }
    public static void main ( String args[]) throws IOException
    { 

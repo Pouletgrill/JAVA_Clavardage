@@ -36,6 +36,12 @@ public class Connexion implements Runnable
          System.exit(1);  
       }           
    }
+   public void Ecrire(String Message)
+      {
+        writer.println(Message);
+        writer.flush();
+      }
+	
    public void run()
    {
      System.out.println("Client connecte");
