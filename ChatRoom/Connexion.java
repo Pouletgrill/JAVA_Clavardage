@@ -35,7 +35,7 @@ public class Connexion implements Runnable
       }
       catch(SocketTimeoutException ez)
       {
-         System.out.println("Trop long innactif");         
+         System.out.println("Trop longtemps innactif");         
       }
       catch (IOException ioe)
       {
@@ -101,6 +101,7 @@ public class Connexion implements Runnable
       {          
          try
          {
+            serveurEcho_.Distribuer(Nom + "a quitte le chat room");
             writer.close();
             reader.close();
             serveurEcho_.TuerConnexion(this); 
