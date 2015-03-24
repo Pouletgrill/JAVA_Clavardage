@@ -15,8 +15,14 @@ public class Connexion implements Runnable
    String Nom;
    String Ip;
    ServeurEcho serveurEcho_;
+<<<<<<< HEAD
    
    
+=======
+   static int NbConnexion = 0; 
+   final int MAXCONNECT = 3;
+      
+>>>>>>> origin/master
    public Connexion(Socket client,  ServeurEcho serveurEcho) 
    {     
       try
@@ -50,6 +56,7 @@ public class Connexion implements Runnable
       }
 	
    public void run()
+<<<<<<< HEAD
    {
      System.out.println("Client connecte");
      
@@ -74,19 +81,31 @@ public class Connexion implements Runnable
          {         
            
             E = reader.readLine();
+=======
+   {      
+     if (NbConnexion < MAXCONNECT)
+     {      
+         NbConnexion++;
+         System.out.println("Client connecte");
+         boolean vide = false;
+         try
+         {
+            writer.print("Username :");
+            writer.flush();
+            Nom = reader.readLine(); 
+>>>>>>> origin/master
             
-            if(E.length() > 80)
+            if(Nom.length() > 8)
             {
-               E = E.substring(0,80);
-            }
-            if(E.length() == 0)
-            {
-               vide = true;               
-            }
-            else
-            {
-                E = Nom + ": " + E;
+               Nom  =  Nom.substring(0,8);        
+            }    
             
+            if(Nom.length() < 1)
+            {
+                 Nom = Ip;         
+            }      
+            
+<<<<<<< HEAD
                 serveurEcho_.Distribuer(E);                
             }            
          }while (!vide);         
@@ -110,5 +129,51 @@ public class Connexion implements Runnable
          }
             System.out.println("Client deconnecte");
       }
+=======
+            do 
+            {         
+              
+               E = reader.readLine();
+               
+               if(E.length() > 80)
+               {
+                  E = E.substring(0,80);
+               }
+               if(E.length() == 0)
+               {
+                  vide = true;               
+               }
+               else
+               {
+                   E = Nom + ": " + E;
+               
+                   serveurEcho_.Distribuer(E);                
+               }
+                        
+               
+            }while (!vide);
+            
+         writer.close();
+         reader.close();
+         System.out.println("Client deconnecte");
+         NbConnexion--;
+         }
+         catch (IOException ez)
+         {         
+            System.err.println(ez);         
+         }
+         catch (NullPointerException nue)
+         {
+            System.err.println("Client deconnecte abruptement");
+            NbConnexion--;
+         }
+     }
+     else
+     {
+       writer.print("Limite de connexion ateint");
+       writer.flush();
+       System.out.println("Le client ne peu se connecter, Nombre de connexion Max ateint");
+     }
+>>>>>>> origin/master
    }   
 }
