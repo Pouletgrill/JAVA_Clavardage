@@ -10,11 +10,13 @@ import java.util.ListIterator;
 public class ServeurEcho
 { 
    ArrayList<Connexion> ListeConnexion = new ArrayList<>();
+   final int MAXCONNECT = 5;
+   
    public void Serveur()
    {
      
       ServerSocket clientServer;
-      final int MAXCONNECT = 5;
+      
       try
       {
          clientServer = new ServerSocket(50000);
@@ -29,26 +31,28 @@ public class ServeurEcho
             try
             {
                if (ListeConnexion.size() < MAXCONNECT)
-               {
-                  
-                  clientServer.setSoTimeout(500);
-                  Socket client = clientServer.accept();                  
+               {                  
+                  clientServer.setSoTimeout(500);                  
+                  Socket client = clientServer.accept();
+                  client.setSoTimeout(90000);                  
                   Connexion connexion = new Connexion(client,this);
                   Thread t = new Thread(connexion);
                   t.setDaemon(true);
                   t.start();
                   ListeConnexion.add(connexion);
+                  System.out.println(ListeConnexion.size());
                }
             }
             catch (IOException ey)
-            {
-            }
+            {            
+                        
+            }                   
          }        
       }
       catch(IOException ez)
       {
-        System.err.println(ez);
-        ez.printStackTrace();
+        System.err.println(ez);        
+        ez.printStackTrace();        
         System.exit(1);  
       }
    }
@@ -56,9 +60,14 @@ public class ServeurEcho
    public synchronized void Distribuer(String Message)
    {
    	for(int i= 0 ;  i < ListeConnexion.size(); i ++)
-	{
-		ListeConnexion.get(i).Ecrire(Message);
-        }
+      {
+         ListeConnexion.get(i).Ecrire(Message);
+      }
+   }
+   public void TuerConnexion(Connexion conn)   
+   {
+      ListeConnexion.remove(conn);
+      System.out.println(ListeConnexion.size());
    }
    public static void main ( String args[]) throws IOException
    { 

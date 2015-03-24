@@ -15,10 +15,13 @@ public class Connexion implements Runnable
    String Nom;
    String Ip;
    ServeurEcho serveurEcho_;
+   
+   
    public Connexion(Socket client,  ServeurEcho serveurEcho) 
    {     
       try
       {
+         
          writer = new PrintWriter(
                      new OutputStreamWriter(
                      client.getOutputStream()));
@@ -28,7 +31,11 @@ public class Connexion implements Runnable
                      
          Ip = client.getInetAddress().getHostAddress();
          serveurEcho_ = serveurEcho;           
-
+         
+      }
+      catch(SocketTimeoutException ez)
+      {
+         System.out.println("Trop long innactif");         
       }
       catch (IOException ioe)
       {
@@ -45,10 +52,11 @@ public class Connexion implements Runnable
    public void run()
    {
      System.out.println("Client connecte");
+     
      boolean vide = false;
       try
       {
-         writer.print("Username :");
+         writer.println("Veuillez entrer votre nom d'utilisateur");
          writer.flush();
          Nom = reader.readLine(); 
          
@@ -61,7 +69,7 @@ public class Connexion implements Runnable
          {
               Nom = Ip;         
          }      
-         
+         serveurEcho_.Distribuer(Nom + " vient de se joindre a la conversation"); 
          do 
          {         
            
@@ -80,23 +88,27 @@ public class Connexion implements Runnable
                 E = Nom + ": " + E;
             
                 serveurEcho_.Distribuer(E);                
-            }
-                     
-            
-         }while (!vide);
-         
-      writer.close();
-      reader.close();
-      System.out.println("Client deconnecte");
-      
+            }            
+         }while (!vide);         
+      }
+      catch (NullPointerException nue)
+      {       
       }
       catch (IOException ez)
       {         
-         System.err.println(ez);         
-      }
-      catch (NullPointerException nue)
-      {
-         System.err.println("Client deconnecte abruptement");
+      }    
+      finally
+      {          
+         try
+         {
+            writer.close();
+            reader.close();
+            serveurEcho_.TuerConnexion(this); 
+         }
+         catch(IOException ez)
+         {
+         }
+            System.out.println("Client deconnecte");
       }
    }   
 }
