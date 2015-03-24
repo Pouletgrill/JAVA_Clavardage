@@ -14,7 +14,6 @@ public class ServeurEcho
    {
      
       ServerSocket clientServer;
-      final int MAXCONNECT = 5;
       try
       {
          clientServer = new ServerSocket(50000);
@@ -27,18 +26,14 @@ public class ServeurEcho
          while (threadLiseur.isAlive())
          {
             try
-            {
-               if (ListeConnexion.size() < MAXCONNECT)
-               {
-                  
-                  clientServer.setSoTimeout(500);
-                  Socket client = clientServer.accept();                  
-                  Connexion connexion = new Connexion(client,this);
-                  Thread t = new Thread(connexion);
-                  t.setDaemon(true);
-                  t.start();
-                  ListeConnexion.add(connexion);
-               }
+            {                  
+               clientServer.setSoTimeout(500);
+               Socket client = clientServer.accept();                  
+               Connexion connexion = new Connexion(client,this);
+               Thread t = new Thread(connexion);
+               t.setDaemon(true);
+               t.start();
+               ListeConnexion.add(connexion);            
             }
             catch (IOException ey)
             {
