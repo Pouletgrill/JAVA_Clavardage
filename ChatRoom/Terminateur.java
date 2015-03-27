@@ -27,4 +27,3 @@ public class Terminateur implements Runnable
       }
    }
 }
-//miamiam
