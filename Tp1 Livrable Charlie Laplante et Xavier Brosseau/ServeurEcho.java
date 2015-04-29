@@ -40,7 +40,7 @@ public class ServeurEcho
                   clientServer.setSoTimeout(500);                  
                   Socket client = clientServer.accept();
                   //Timeout sur le client
-                  client.setSoTimeout(90000);
+                  client.setSoTimeout(10000);
 		  //Creation de la connexion                  
                   Connexion connexion = new Connexion(client,this);
                   Thread t = new Thread(connexion);
