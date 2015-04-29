@@ -34,7 +34,7 @@ public class Connexion implements Runnable
                      client.getInputStream()));
          //Trouve et met ip addresse dans la string ip           
          Ip = client.getInetAddress().getHostAddress();
-	//Met les infos de notre serveur dans la variable serveur du client
+	     //Met les infos de notre serveur dans la variable serveur du client
          serveurEcho_ = serveurEcho;           
          
       }
@@ -63,9 +63,6 @@ public class Connexion implements Runnable
      boolean vide = false;
       try
       {
-	//Demande le nom d'utilisateur à l'utilisateur
-         writer.println("Veuillez entrer votre nom d'utilisateur");
-         writer.flush();
 	//lit le nom de l'usager
          Nom = reader.readLine(); 
          //Assure que le nom soit au maximum 8 charactères
@@ -94,6 +91,10 @@ public class Connexion implements Runnable
             {
                vide = true;               
             }
+			else if(E.trim().length() == 0)
+			{
+				
+			}
 	    //Envoie le message au autre usager via le serveur echo
             else
             {
@@ -114,7 +115,7 @@ public class Connexion implements Runnable
          try
          {
 	    //Envoie le message de déconnexion à tout le monde
-            serveurEcho_.Distribuer(Nom + "a quitte le chat room");
+            serveurEcho_.Distribuer(Nom + " a quitte le chat room");
 	    //Ferme le writer et le reader
             writer.close();
             reader.close();
